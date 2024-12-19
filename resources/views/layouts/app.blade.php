@@ -8,7 +8,8 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Optional: Custom CSS -->
+
+    <!-- Custom CSS -->
     <style>
         body {
             background-color: #f8f9fa;
@@ -16,8 +17,12 @@
         .navbar {
             margin-bottom: 20px;
         }
-        .container {
+        .container-fluid {
             margin-top: 20px;
+        }
+        .sidebar {
+            height: 100%;
+            border-right: 1px solid #ddd;
         }
     </style>
 </head>
@@ -44,8 +49,8 @@
         </div>
     </nav>
 
-    <!-- Content Section -->
-    <main class="container">
+    <!-- Main Content -->
+    <main class="container-fluid">
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}

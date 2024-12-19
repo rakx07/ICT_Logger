@@ -12,3 +12,6 @@ Route::get('/', function () {
 // Resource routes for the TaskController
 Route::resource('tasks', TaskController::class);
 Route::resource('staff', StaffController::class);
+
+Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
