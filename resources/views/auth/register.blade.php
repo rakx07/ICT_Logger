@@ -11,7 +11,7 @@
 
     <style>
         body {
-            background-image: linear-gradient(to right, #4facfe, #00f2fe);
+            background-image: linear-gradient(to right, #03350f, #92d01e);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -35,11 +35,21 @@
             text-align: center;
         }
         .btn-primary {
-            background-color: #4facfe;
+            background-color: #028120;
             border: none;
         }
         .btn-primary:hover {
-            background-color: #00f2fe;
+            background-color: #016515;
+        }
+        .text-center a {
+            color: #01510e;
+            text-decoration: none;
+        }
+        .text-center a:hover {
+            text-decoration: underline;
+        }
+        input::placeholder {
+            font-size: 0.85em; /* Slightly smaller placeholders */
         }
         @keyframes fadeIn {
             from {
@@ -60,7 +70,7 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
             <div class="mb-3">
-                <label for="name" class="form-label">Full Name</label>
+                <label for="name" class="form-label fw-bold">Full Name</label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" value="{{ old('name') }}" required>
                 @error('name')
                     <span class="text-danger">{{ $message }}</span>
@@ -68,7 +78,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="email" class="form-label">Email Address</label>
+                <label for="email" class="form-label fw-bold">Email Address</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required>
                 @error('email')
                     <span class="text-danger">{{ $message }}</span>
@@ -76,7 +86,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label fw-bold">Password</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
                 @error('password')
                     <span class="text-danger">{{ $message }}</span>
@@ -84,7 +94,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <label for="password_confirmation" class="form-label fw-bold">Confirm Password</label>
                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password" required>
             </div>
 

@@ -11,7 +11,7 @@
 
     <style>
         body {
-            background-image: linear-gradient(to right, #4facfe, #00f2fe);
+            background-image: linear-gradient(to right, #03350f, #92d01e);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -35,22 +35,25 @@
             text-align: center;
         }
         .btn-primary {
-            background-color: #4facfe;
+            background-color: #028120;
             border: none;
         }
         .btn-primary:hover {
-            background-color: #00f2fe;
+            background-color: #016515;
         }
         .register-link {
             text-align: center;
             margin-top: 15px;
         }
         .register-link a {
-            color: #4facfe;
+            color: #01510e;
             text-decoration: none;
         }
         .register-link a:hover {
             text-decoration: underline;
+        }
+        input::placeholder {
+            font-size: 0.85em; /* Slightly smaller placeholders */
         }
         @keyframes fadeIn {
             from {
@@ -77,7 +80,7 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="mb-4">
-                <label for="email" class="form-label">Email Address</label>
+                <label for="email" class="form-label fw-bold">Email Address</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required>
                 @error('email')
                     <span class="text-danger">{{ $message }}</span>
@@ -85,7 +88,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label fw-bold">Password</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
                 @error('password')
                     <span class="text-danger">{{ $message }}</span>
@@ -94,7 +97,7 @@
 
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                <label class="form-check-label" for="remember">Remember Me</label>
+                <label class="form-check-label fw-bold" for="remember">Remember Me</label>
             </div>
 
             <div class="d-grid">
