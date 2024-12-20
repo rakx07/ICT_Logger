@@ -3,7 +3,9 @@
 @section('content')
 <div class="container">
     <h1 class="mb-4">Add New Staff</h1>
-    <form action="{{ route('staff.store') }}" method="POST">
+
+    <!-- Staff Form -->
+    <form id="staffForm" action="{{ route('staff.store') }}" method="POST">
         @csrf
         <div class="row mb-3">
             <div class="col-md-4">
@@ -32,7 +34,7 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="phone_number" class="form-label">Phone Number</label>
-                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter phone number (optional)">
+                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter phone number (optional)" pattern="\d+" title="Please enter only numbers">
             </div>
             <div class="col-md-6">
                 <label for="address" class="form-label">Address</label>
@@ -44,5 +46,98 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Staff Added</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    The staff has been added successfully.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff List Table -->
+    <div class="mt-5">
+        <h2 class="mb-3">Staff List</h2>
+        <table class="table table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Position</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody id="staffTableBody">
+                @foreach($staff as $member)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $member->first_name }}</td>
+                    <td>{{ $member->middle_name }}</td>
+                    <td>{{ $member->last_name }}</td>
+                    <td>{{ $member->email }}</td>
+                    <td>{{ $member->position }}</td>
+                    <td>{{ $member->phone_number }}</td>
+                    <td>{{ $member->address }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script>
+    document.getElementById('staffForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const tableBody = document.getElementById('staffTableBody');
+                const newRow = document.createElement('tr');
+
+                newRow.innerHTML = `
+                    <td>${data.staff.id}</td>
+                    <td>${data.staff.first_name}</td>
+                    <td>${data.staff.middle_name || ''}</td>
+                    <td>${data.staff.last_name}</td>
+                    <td>${data.staff.email}</td>
+                    <td>${data.staff.position}</td>
+                    <td>${data.staff.phone_number || ''}</td>
+                    <td>${data.staff.address || ''}</td>
+                `;
+
+                tableBody.prepend(newRow);
+
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+
+                this.reset();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
 @endsection

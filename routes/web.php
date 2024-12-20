@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Auth;
 
 // Redirect the root URL to the task logs page
 Route::get('/', function () {
@@ -13,11 +15,18 @@ Route::get('/', function () {
 Route::resource('tasks', TaskController::class);
 Route::resource('staff', StaffController::class);
 
-// Specific routes for TaskController
-Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
-Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+// Authentication routes
+Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-// Specific routes for StaffController
-Route::get('/staff/{staff}/edit', [StaffController::class, 'edit'])->name('staff.edit');
-Route::put('/staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
-Route::delete('/staff/{staff}', [StaffController::class, 'destroy'])->name('staff.destroy');
+// Password reset routes
+Route::get('password/reset', [AuthController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
+
+// Protected routes
+Route::middleware('auth')->group(function () {
+    Route::get('/home', function () {
+        return view('home');
+    });
+});

@@ -12,7 +12,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $staff = Staff::paginate(10); // Use paginate() to enable pagination
+        $staff = Staff::paginate(10); // Paginate staff records
         return view('staff.index', compact('staff'));
     }
 
@@ -21,7 +21,8 @@ class StaffController extends Controller
      */
     public function create()
     {
-        return view('staff.create');
+        $staff = Staff::all(); // Fetch all staff for the table
+        return view('staff.create', compact('staff'));
     }
 
     /**
@@ -29,19 +30,29 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:staff,email',
-            'position' => 'required|string|max:255',
-            'phone_number' => 'nullable|string|max:15',
-            'address' => 'nullable|string|max:500',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'middle_name' => 'nullable|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:staff,email',
+                'position' => 'required|string|max:255',
+                'phone_number' => 'nullable|string|max:15',
+                'address' => 'nullable|string|max:500',
+            ]);
 
-        Staff::create($request->all());
+            $staff = Staff::create($validatedData);
 
-        return redirect()->route('staff.index')->with('success', 'Staff created successfully.');
+            return response()->json([
+                'success' => true,
+                'staff' => $staff,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -57,19 +68,23 @@ class StaffController extends Controller
      */
     public function update(Request $request, Staff $staff)
     {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:staff,email,' . $staff->id,
-            'position' => 'required|string|max:255',
-            'phone_number' => 'nullable|string|max:15',
-            'address' => 'nullable|string|max:500',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'middle_name' => 'nullable|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:staff,email,' . $staff->id,
+                'position' => 'required|string|max:255',
+                'phone_number' => 'nullable|string|max:50',
+                'address' => 'nullable|string|max:500',
+            ]);
 
-        $staff->update($request->all());
+            $staff->update($validatedData);
 
-        return redirect()->route('staff.index')->with('success', 'Staff updated successfully.');
+            return redirect()->route('staff.index')->with('success', 'Staff updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('staff.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -77,8 +92,11 @@ class StaffController extends Controller
      */
     public function destroy(Staff $staff)
     {
-        $staff->delete();
-
-        return redirect()->route('staff.index')->with('success', 'Staff deleted successfully.');
+        try {
+            $staff->delete();
+            return redirect()->route('staff.index')->with('success', 'Staff deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('staff.index')->with('error', $e->getMessage());
+        }
     }
 }
