@@ -12,7 +12,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $staff = Staff::all();
+        $staff = Staff::paginate(10); // Use paginate() to enable pagination
         return view('staff.index', compact('staff'));
     }
 
@@ -30,9 +30,13 @@ class StaffController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:staff,email',
             'position' => 'required|string|max:255',
+            'phone_number' => 'nullable|string|max:15',
+            'address' => 'nullable|string|max:500',
         ]);
 
         Staff::create($request->all());
@@ -54,9 +58,13 @@ class StaffController extends Controller
     public function update(Request $request, Staff $staff)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:staff,email,' . $staff->id,
             'position' => 'required|string|max:255',
+            'phone_number' => 'nullable|string|max:15',
+            'address' => 'nullable|string|max:500',
         ]);
 
         $staff->update($request->all());

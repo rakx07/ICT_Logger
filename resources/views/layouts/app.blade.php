@@ -15,20 +15,57 @@
             background-color: #f8f9fa;
         }
         .navbar {
-            margin-bottom: 20px;
+            margin-bottom: 0;
+            background-color: #007bff;
         }
-        .container-fluid {
-            margin-top: 20px;
+        .navbar .navbar-brand {
+            color: #fff;
+        }
+        .navbar .navbar-nav .nav-link {
+            color: #fff;
         }
         .sidebar {
-            height: 100%;
-            border-right: 1px solid #ddd;
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 56px;
+            left: 0;
+            background-color: #343a40;
+            color: #fff;
+            padding-top: 20px;
+            transition: all 0.3s;
+        }
+        .sidebar a {
+            color: #ddd;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+            color: #fff;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+            }
+            .content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url('/') }}">
                 {{ config('app.name', 'Task Management') }}
@@ -39,18 +76,25 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tasks.index') }}">Task Logs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tasks.create') }}">New Task</a>
+                        <span class="nav-link">User Type: Admin</span>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="{{ url('/') }}">Dashboard</a>
+        <a href="{{ route('tasks.index') }}">Task Logs</a>
+        <a href="{{ route('tasks.create') }}">New Task</a>
+        <a href="{{ route('staff.index') }}">Staff List</a>
+        <a href="#">Reports</a>
+        <a href="#">Settings</a>
+    </div>
+
     <!-- Main Content -->
-    <main class="container-fluid">
+    <main class="content">
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}

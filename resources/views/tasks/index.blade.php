@@ -2,11 +2,17 @@
 
 @section('content')
 <div class="container">
-    <h1>Task Logs</h1>
-    <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3">Log New Task</a>
+    <h1 class="mb-4">Task Logs</h1>
 
-    <table class="table table-bordered">
-        <thead>
+    <!-- Action Buttons -->
+    <div class="mb-3 d-flex justify-content-between">
+        <a href="{{ route('tasks.create') }}" class="btn btn-primary">Add New Task</a>
+        <a href="{{ route('staff.create') }}" class="btn btn-secondary">Add New Staff</a>
+    </div>
+
+    <!-- Task Logs Table -->
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
             <tr>
                 <th>Date</th>
                 <th>Staff</th>
