@@ -76,7 +76,14 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <span class="nav-link">User Type: Admin</span>
+                        <span class="nav-link">{{ auth()->user()->admin == 1 ? 'User Type: Admin' : 'User Type: Regular' }}</span>
+                    </li>
+                    <!-- Logout Button -->
+                    <li class="nav-item">
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -88,9 +95,13 @@
         <a href="{{ url('/') }}">Dashboard</a>
         <a href="{{ route('tasks.index') }}">Task Logs</a>
         <a href="{{ route('tasks.create') }}">New Task</a>
-        <a href="{{ route('staff.index') }}">Staff List</a>
-        <a href="#">Reports</a>
-        <a href="#">Settings</a>
+
+        <!-- Admin specific links -->
+        @if(auth()->user()->admin == 1)
+            <a href="{{ route('staff.index') }}">Staff List</a>
+            <a href="#">Reports</a>
+            <a href="#">Settings</a>
+        @endif
     </div>
 
     <!-- Main Content -->

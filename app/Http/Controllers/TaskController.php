@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Staff;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -81,12 +82,22 @@ class TaskController extends Controller
     }
 
     /**
-     * Delete a task from the database.
+     * Delete a task from the database (Only accessible by Admin).
      */
     public function destroy(Task $task)
-    {
-        $task->delete();
+{
+    // Get the authenticated user
+    $user = Auth::user();  // Use Auth::user() instead of auth()->user()
 
-        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
+    // Check if user is an admin
+    if (!$user || $user->admin != 1) {
+        return redirect()->route('tasks.index')->with('error', 'You are not authorized to delete this task.');
     }
+
+    // Delete the task
+    $task->delete();
+
+    return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
+}
+    
 }
