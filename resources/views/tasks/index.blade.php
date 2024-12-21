@@ -7,7 +7,6 @@
     <!-- Action Buttons -->
     <div class="mb-3 d-flex justify-content-between">
         <a href="{{ route('tasks.create') }}" class="btn btn-primary">Add New Task</a>
-        <a href="{{ route('staff.create') }}" class="btn btn-secondary">Add New Staff</a>
     </div>
 
     <!-- Task Logs Table -->
@@ -32,17 +31,13 @@
                 <td>{{ $task->remarks }}</td>
                 <td>
                     <a href="{{ route('tasks.edit', $task) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="{{ route('tasks.destroy', $task) }}" method="POST" style="display: inline-block;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
+    <!-- Pagination Links -->
     {{ $tasks->links() }}
 </div>
 @endsection

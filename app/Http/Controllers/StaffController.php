@@ -12,7 +12,8 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $staff = Staff::paginate(10); // Paginate staff records
+        // Fetch staff records ordered by creation date in descending order
+        $staff = Staff::orderBy('created_at', 'desc')->paginate(10); 
         return view('staff.index', compact('staff'));
     }
 
@@ -20,10 +21,10 @@ class StaffController extends Controller
      * Show the form for creating a new staff.
      */
     public function create()
-    {
-        $staff = Staff::all(); // Fetch all staff for the table
-        return view('staff.create', compact('staff'));
-    }
+{
+    $staff = Staff::orderBy('created_at', 'desc')->get(); // Fetch all staff records, sorted by latest
+    return view('staff.create', compact('staff'));
+}
 
     /**
      * Store a newly created staff in the database.

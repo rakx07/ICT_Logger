@@ -9,7 +9,7 @@
         @csrf
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="staff_id" class="form-label">Staff</label>
+                <label for="staff_id" class="form-label fw-bold">Staff</label>
                 <select name="staff_id" id="staff_id" class="form-select" required>
                     <option value="" disabled selected>Select Staff</option>
                     @foreach($staff as $s)
@@ -18,19 +18,19 @@
                 </select>
             </div>
             <div class="col-md-6">
-                <label for="transaction_date" class="form-label">Transaction Date</label>
+                <label for="transaction_date" class="form-label fw-bold">Transaction Date</label>
                 <input type="date" name="transaction_date" id="transaction_date" class="form-control" value="{{ now()->toDateString() }}" required>
             </div>
         </div>
 
         <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
+            <label for="description" class="form-label fw-bold">Description</label>
             <textarea name="description" id="description" class="form-control" rows="3" placeholder="Enter task description..." required></textarea>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="status" class="form-label">Status</label>
+                <label for="status" class="form-label fw-bold">Status</label>
                 <select name="status" id="status" class="form-select" required>
                     <option value="on process">On Process</option>
                     <option value="done">Done</option>
@@ -38,7 +38,7 @@
                 </select>
             </div>
             <div class="col-md-6">
-                <label for="remarks" class="form-label">Remarks</label>
+                <label for="remarks" class="form-label fw-bold">Remarks</label>
                 <input type="text" name="remarks" id="remarks" class="form-control" placeholder="Optional remarks">
             </div>
         </div>
@@ -73,7 +73,6 @@
         <table class="table table-hover table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>#</th>
                     <th>Staff</th>
                     <th>Transaction Date</th>
                     <th>Description</th>
@@ -84,7 +83,6 @@
             <tbody id="taskTableBody">
                 @foreach($tasks as $task)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $task->staff->first_name }} {{ $task->staff->last_name }}</td>
                     <td>{{ $task->transaction_date }}</td>
                     <td>{{ $task->description }}</td>
@@ -117,7 +115,6 @@
                 const newRow = document.createElement('tr');
 
                 newRow.innerHTML = `
-                    <td>${data.task.id}</td>
                     <td>${data.task.staff.first_name} ${data.task.staff.last_name}</td>
                     <td>${data.task.transaction_date}</td>
                     <td>${data.task.description}</td>
