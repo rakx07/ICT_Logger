@@ -14,6 +14,7 @@ class TaskController extends Controller
      */
     public function index()
     {
+        // Ensure tasks are loaded with their associated staff
         $tasks = Task::with('staff')->orderBy('transaction_date', 'desc')->paginate(10);
         return view('tasks.index', compact('tasks'));
     }
@@ -45,10 +46,10 @@ class TaskController extends Controller
         // Create the task
         $task = Task::create($validated);
 
-        // Return JSON response for AJAX
+        // Return JSON response for AJAX with staff relationship loaded
         return response()->json([
             'success' => true,
-            'task' => $task->load('staff'), // Include staff relationship
+            'task' => $task->load('staff'), // Ensure the staff relationship is included
         ]);
     }
 
@@ -85,19 +86,18 @@ class TaskController extends Controller
      * Delete a task from the database (Only accessible by Admin).
      */
     public function destroy(Task $task)
-{
-    // Get the authenticated user
-    $user = Auth::user();  // Use Auth::user() instead of auth()->user()
+    {
+        // Get the authenticated user
+        $user = Auth::user(); // Use Auth::user() instead of auth()->user()
 
-    // Check if user is an admin
-    if (!$user || $user->admin != 1) {
-        return redirect()->route('tasks.index')->with('error', 'You are not authorized to delete this task.');
+        // Check if user is an admin
+        if (!$user || $user->admin != 1) {
+            return redirect()->route('tasks.index')->with('error', 'You are not authorized to delete this task.');
+        }
+
+        // Delete the task
+        $task->delete();
+
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
     }
-
-    // Delete the task
-    $task->delete();
-
-    return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
-}
-    
 }

@@ -25,7 +25,7 @@
             @foreach($tasks as $task)
             <tr>
                 <td>{{ $task->transaction_date }}</td>
-                <td>{{ $task->staff->name }}</td>
+                <td>{{ $task->staff->full_name ?? 'N/A' }}</td> <!-- Use full_name accessor -->
                 <td>{{ $task->description }}</td>
                 <td>{{ $task->status }}</td>
                 <td>{{ $task->remarks }}</td>
