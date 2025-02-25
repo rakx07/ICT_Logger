@@ -66,21 +66,31 @@ class TaskController extends Controller
      * Update an existing task in the database.
      */
     public function update(Request $request, Task $task)
-    {
-        // Validate the request
-        $validated = $request->validate([
-            'staff_id' => 'required|exists:staff,id',
-            'transaction_date' => 'required|date',
-            'description' => 'required|string|max:255',
-            'status' => 'required|in:on process,done,cancelled',
-            'remarks' => 'nullable|string|max:255',
+{
+    // Validate the request
+    $validated = $request->validate([
+        'staff_id' => 'required|exists:staff,id',
+        'transaction_date' => 'required|date',
+        'description' => 'required|string|max:255',
+        'status' => 'required|in:on process,done,cancelled',
+        'remarks' => 'nullable|string|max:255',
+    ]);
+
+    // Update the task
+    $task->update($validated);
+
+    // Check if request is AJAX
+    if ($request->ajax()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Task updated successfully!',
+            'task' => $task->load('staff') // Load the related staff details
         ]);
-
-        // Update the task
-        $task->update($validated);
-
-        return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
     }
+
+    return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
+}
+    
 
     /**
      * Delete a task from the database (Only accessible by Admin).
@@ -100,4 +110,15 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
     }
+
+    public function updateStatus(Request $request, Task $task)
+{
+    $request->validate([
+        'status' => 'required|in:on process,done,cancelled',
+    ]);
+
+    $task->update(['status' => $request->status]);
+
+    return response()->json(['success' => true, 'message' => 'Task status updated successfully.']);
+}
 }
