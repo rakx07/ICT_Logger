@@ -67,7 +67,7 @@
                 <p class="fs-5 text-muted">The task has been successfully updated.</p>
             </div>
             <div class="modal-footer border-0 d-flex justify-content-center">
-                <button type="button" class="btn btn-success px-4 fw-bold" data-bs-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-success px-4 fw-bold" id="successModalOk">OK</button>
             </div>
         </div>
     </div>
@@ -94,6 +94,11 @@
                 // ✅ Show Success Modal
                 let successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
+
+                // ✅ Redirect to Task Logs after clicking OK
+                document.getElementById('successModalOk').addEventListener('click', function() {
+                    window.location.href = "{{ route('tasks.index') }}";
+                });
             } else {
                 alert('Failed to update task.');
             }

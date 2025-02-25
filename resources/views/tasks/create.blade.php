@@ -63,7 +63,7 @@
                 <p class="fs-5 text-muted">The task has been successfully added.</p>
             </div>
             <div class="modal-footer border-0 d-flex justify-content-center">
-                <button type="button" class="btn btn-success px-4 fw-bold" data-bs-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-success px-4 fw-bold" id="successModalOk">OK</button>
             </div>
         </div>
     </div>
@@ -89,19 +89,10 @@
                 let successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
 
-                // ✅ Add New Task to the Table
-                const tableBody = document.getElementById('taskTableBody');
-                const newRow = document.createElement('tr');
-
-                newRow.innerHTML = `
-                    <td>${data.task.staff.first_name} ${data.task.staff.last_name}</td>
-                    <td>${data.task.transaction_date}</td>
-                    <td>${data.task.description}</td>
-                    <td>${data.task.status}</td>
-                    <td>${data.task.remarks || ''}</td>
-                `;
-
-                tableBody.prepend(newRow);
+                // ✅ Redirect to Task Logs after clicking OK
+                document.getElementById('successModalOk').addEventListener('click', function() {
+                    window.location.href = "{{ route('tasks.index') }}";
+                });
 
                 // ✅ Reset the Form
                 document.getElementById('taskForm').reset();

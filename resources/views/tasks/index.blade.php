@@ -49,7 +49,7 @@
 
 <!-- ✅ Stylish Bootstrap Modal for Success Message -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered"> <!-- Centering the modal -->
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content text-center p-4">
             <div class="modal-header border-0">
                 <h5 class="modal-title fw-bold text-success" id="successModalLabel">✔ Task Updated!</h5>
@@ -86,6 +86,10 @@
                     if (data.success) {
                         let successModal = new bootstrap.Modal(document.getElementById('successModal'));
                         successModal.show();
+                        // ✅ Reload page to reflect latest updates
+                        successModal._element.addEventListener('hidden.bs.modal', function () {
+                            location.reload();
+                        });
                     } else {
                         alert('Failed to update status.');
                     }

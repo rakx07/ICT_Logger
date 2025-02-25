@@ -14,8 +14,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-        // Ensure tasks are loaded with their associated staff
-        $tasks = Task::with('staff')->orderBy('transaction_date', 'desc')->paginate(10);
+        // Fetch tasks ordered by the latest update first, then by creation date
+        $tasks = Task::with('staff')
+                    ->orderByRaw('GREATEST(updated_at, created_at) DESC') // Sort by the latest of updated_at or created_at
+                    ->paginate(10);
+
         return view('tasks.index', compact('tasks'));
     }
 
@@ -25,8 +28,7 @@ class TaskController extends Controller
     public function create()
     {
         $staff = Staff::all(); // Fetch all staff for the dropdown
-        $tasks = Task::with('staff')->latest()->get(); // Fetch all tasks with staff, sorted by latest
-        return view('tasks.create', compact('staff', 'tasks'));
+        return view('tasks.create', compact('staff'));
     }
 
     /**
@@ -49,7 +51,7 @@ class TaskController extends Controller
         // Return JSON response for AJAX with staff relationship loaded
         return response()->json([
             'success' => true,
-            'task' => $task->load('staff'), // Ensure the staff relationship is included
+            'task' => $task->load('staff'),
         ]);
     }
 
@@ -66,31 +68,30 @@ class TaskController extends Controller
      * Update an existing task in the database.
      */
     public function update(Request $request, Task $task)
-{
-    // Validate the request
-    $validated = $request->validate([
-        'staff_id' => 'required|exists:staff,id',
-        'transaction_date' => 'required|date',
-        'description' => 'required|string|max:255',
-        'status' => 'required|in:on process,done,cancelled',
-        'remarks' => 'nullable|string|max:255',
-    ]);
-
-    // Update the task
-    $task->update($validated);
-
-    // Check if request is AJAX
-    if ($request->ajax()) {
-        return response()->json([
-            'success' => true,
-            'message' => 'Task updated successfully!',
-            'task' => $task->load('staff') // Load the related staff details
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'staff_id' => 'required|exists:staff,id',
+            'transaction_date' => 'required|date',
+            'description' => 'required|string|max:255',
+            'status' => 'required|in:on process,done,cancelled',
+            'remarks' => 'nullable|string|max:255',
         ]);
-    }
 
-    return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
-}
-    
+        // Update the task and force `updated_at` timestamp to be refreshed
+        $task->update(array_merge($validated, ['updated_at' => now()]));
+
+        // Check if request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Task updated successfully!',
+                'task' => $task->load('staff')
+            ]);
+        }
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
+    }
 
     /**
      * Delete a task from the database (Only accessible by Admin).
@@ -98,7 +99,7 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         // Get the authenticated user
-        $user = Auth::user(); // Use Auth::user() instead of auth()->user()
+        $user = Auth::user();
 
         // Check if user is an admin
         if (!$user || $user->admin != 1) {
@@ -111,14 +112,24 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
     }
 
+    /**
+     * Update only the status of a task.
+     */
     public function updateStatus(Request $request, Task $task)
-{
-    $request->validate([
-        'status' => 'required|in:on process,done,cancelled',
-    ]);
+    {
+        $request->validate([
+            'status' => 'required|in:on process,done,cancelled',
+        ]);
 
-    $task->update(['status' => $request->status]);
+        // Update status and force `updated_at` timestamp refresh
+        $task->update([
+            'status' => $request->status,
+            'updated_at' => now(),
+        ]);
 
-    return response()->json(['success' => true, 'message' => 'Task status updated successfully.']);
-}
+        return response()->json([
+            'success' => true,
+            'message' => 'Task status updated successfully.',
+        ]);
+    }
 }
