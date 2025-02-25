@@ -9,10 +9,21 @@
         @csrf
         @method('PUT')
 
-        <div class="mb-3">
-            <label for="name" class="form-label fw-bold">Name</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ $staff->name }}" required>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="first_name" class="form-label fw-bold">First Name</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ $staff->first_name }}" required>
+            </div>
+            <div class="col-md-4">
+                <label for="middle_name" class="form-label fw-bold">Middle Name</label>
+                <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ $staff->middle_name }}">
+            </div>
+            <div class="col-md-4">
+                <label for="last_name" class="form-label fw-bold">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ $staff->last_name }}" required>
+            </div>
         </div>
+
         <div class="mb-3">
             <label for="email" class="form-label fw-bold">Email</label>
             <input type="email" class="form-control" id="email" name="email" value="{{ $staff->email }}" required>
@@ -42,7 +53,7 @@
                 <p class="fs-5 text-muted">The staff member's details have been successfully updated.</p>
             </div>
             <div class="modal-footer border-0 d-flex justify-content-center">
-                <button type="button" class="btn btn-success px-4 fw-bold" data-bs-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-success px-4 fw-bold" id="successModalOk">OK</button>
             </div>
         </div>
     </div>
@@ -69,6 +80,11 @@
                 // ✅ Show Success Modal
                 let successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
+
+                // ✅ Redirect after clicking OK
+                document.getElementById('successModalOk').addEventListener('click', function() {
+                    window.location.href = "{{ route('staff.index') }}";
+                });
             } else {
                 alert('Failed to update staff details.');
             }

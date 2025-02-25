@@ -21,10 +21,10 @@ class StaffController extends Controller
      * Show the form for creating a new staff.
      */
     public function create()
-{
-    $staff = Staff::orderBy('created_at', 'desc')->get(); // Fetch all staff records, sorted by latest
-    return view('staff.create', compact('staff'));
-}
+    {
+        $staff = Staff::orderBy('created_at', 'desc')->get();
+        return view('staff.create', compact('staff'));
+    }
 
     /**
      * Store a newly created staff in the database.
@@ -82,9 +82,15 @@ class StaffController extends Controller
 
             $staff->update($validatedData);
 
-            return redirect()->route('staff.index')->with('success', 'Staff updated successfully.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Staff updated successfully.',
+            ]);
         } catch (\Exception $e) {
-            return redirect()->route('staff.index')->with('error', $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 
