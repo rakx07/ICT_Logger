@@ -48,50 +48,24 @@
             <button type="submit" class="btn btn-primary">Log Task</button>
         </div>
     </form>
+</div>
 
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Task Added</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    The task has been added successfully.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-                </div>
+<!-- ✅ Stylish Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold text-success" id="successModalLabel">✔ Task Added!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-check-circle text-success fa-4x mb-3"></i> <!-- ✅ Check Icon -->
+                <p class="fs-5 text-muted">The task has been successfully added.</p>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-success px-4 fw-bold" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
-    </div>
-
-    <!-- Task Table -->
-    <div class="mt-5">
-        <h2 class="mb-3">Task Logs</h2>
-        <table class="table table-hover table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Staff</th>
-                    <th>Transaction Date</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Remarks</th>
-                </tr>
-            </thead>
-            <tbody id="taskTableBody">
-                @foreach($tasks as $task)
-                <tr>
-                    <td>{{ $task->staff->first_name }} {{ $task->staff->last_name }}</td>
-                    <td>{{ $task->transaction_date }}</td>
-                    <td>{{ $task->description }}</td>
-                    <td>{{ $task->status }}</td>
-                    <td>{{ $task->remarks }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
     </div>
 </div>
 
@@ -111,6 +85,11 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // ✅ Show Success Modal
+                let successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+
+                // ✅ Add New Task to the Table
                 const tableBody = document.getElementById('taskTableBody');
                 const newRow = document.createElement('tr');
 
@@ -124,13 +103,18 @@
 
                 tableBody.prepend(newRow);
 
-                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-
-                this.reset();
+                // ✅ Reset the Form
+                document.getElementById('taskForm').reset();
             }
         })
         .catch(error => console.error('Error:', error));
     });
 </script>
+
+<!-- ✅ Load Local Bootstrap JS -->
+<script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- ✅ Load Local FontAwesome (for check icon) -->
+<script src="{{ asset('assets/fontawesome/js/all.min.js') }}"></script>
+
 @endsection

@@ -54,6 +54,25 @@
     </form>
 </div>
 
+<!-- ✅ Stylish Bootstrap Modal for Success Message -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"> <!-- Center the modal -->
+        <div class="modal-content text-center p-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold text-success" id="successModalLabel">✔ Task Updated!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-check-circle text-success fa-4x mb-3"></i> <!-- ✅ Stylish Check Icon -->
+                <p class="fs-5 text-muted">The task has been successfully updated.</p>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-success px-4 fw-bold" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.getElementById('editTaskForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent default form submission
@@ -72,8 +91,9 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Task updated successfully!');
-                window.location.href = "{{ route('tasks.index') }}"; // Redirect after success
+                // ✅ Show Success Modal
+                let successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
             } else {
                 alert('Failed to update task.');
             }
@@ -81,4 +101,11 @@
         .catch(error => console.error('Error:', error));
     });
 </script>
+
+<!-- ✅ Load Local Bootstrap JS -->
+<script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- ✅ Load Local FontAwesome (for check icon) -->
+<script src="{{ asset('assets/fontawesome/js/all.min.js') }}"></script>
+
 @endsection

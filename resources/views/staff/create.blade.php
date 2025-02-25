@@ -46,59 +46,60 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
+</div>
 
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Staff Added</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    The staff has been added successfully.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-                </div>
+<!-- ✅ Stylish Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold text-success" id="successModalLabel">✔ Staff Added!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-check-circle text-success fa-4x mb-3"></i> <!-- ✅ Check Icon -->
+                <p class="fs-5 text-muted">The staff member has been successfully added.</p>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-success px-4 fw-bold" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Staff List Table -->
-    <div class="mt-5">
-        <h2 class="mb-3">Staff List</h2>
-        @if($staff->isEmpty())
-            <p>No staff available. Add new staff above.</p>
-        @else
-            <table class="table table-hover table-bordered">
-                <thead class="table-dark">
-                    <tr>
-                        <th>First Name</th>
-                        <th>Middle Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Position</th>
-                        <th>Phone Number</th>
-                        <th>Address</th>
-                    </tr>
-                </thead>
-                <tbody id="staffTableBody">
-                    @foreach($staff as $member)
-                    <tr>
-                        <td>{{ $member->first_name }}</td>
-                        <td>{{ $member->middle_name }}</td>
-                        <td>{{ $member->last_name }}</td>
-                        <td>{{ $member->email }}</td>
-                        <td>{{ $member->position }}</td>
-                        <td>{{ $member->phone_number }}</td>
-                        <td>{{ $member->address }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
+<!-- Staff List Table -->
+<div class="mt-5">
+    <h2 class="mb-3">Staff List</h2>
+    @if($staff->isEmpty())
+        <p>No staff available. Add new staff above.</p>
+    @else
+        <table class="table table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Position</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody id="staffTableBody">
+                @foreach($staff as $member)
+                <tr>
+                    <td>{{ $member->first_name }}</td>
+                    <td>{{ $member->middle_name }}</td>
+                    <td>{{ $member->last_name }}</td>
+                    <td>{{ $member->email }}</td>
+                    <td>{{ $member->position }}</td>
+                    <td>{{ $member->phone_number }}</td>
+                    <td>{{ $member->address }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 </div>
 
 <script>
@@ -117,6 +118,11 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // ✅ Show Success Modal
+                let successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+
+                // ✅ Add New Staff to the Table
                 const tableBody = document.getElementById('staffTableBody');
                 const newRow = document.createElement('tr');
 
@@ -132,13 +138,18 @@
 
                 tableBody.prepend(newRow);
 
-                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-
-                this.reset();
+                // ✅ Reset the Form
+                document.getElementById('staffForm').reset();
             }
         })
         .catch(error => console.error('Error:', error));
     });
 </script>
+
+<!-- ✅ Load Local Bootstrap JS -->
+<script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- ✅ Load Local FontAwesome (for check icon) -->
+<script src="{{ asset('assets/fontawesome/js/all.min.js') }}"></script>
+
 @endsection
