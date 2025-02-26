@@ -21,10 +21,18 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('password/reset', [AuthController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
 
+
+//Register Control Purposes
+Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('register', [AuthController::class, 'register']);
+
+
+
 // Registration routes (Only Admin can access)
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
-    Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('register', [AuthController::class, 'register']);
+    // Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
+    // Route::post('register', [AuthController::class, 'register']);
+
 });
 
 // Protected routes (only accessible when logged in)

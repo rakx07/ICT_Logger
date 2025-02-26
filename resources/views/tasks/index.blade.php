@@ -43,8 +43,24 @@
         </tbody>
     </table>
 
-    <!-- Pagination Links -->
-    {{ $tasks->links() }}
+    <!-- Pagination Links with Fixed Icons -->
+    <div class="d-flex justify-content-center">
+        <style>
+            .pagination .page-link {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px; /* Adjust size as needed */
+                height: 32px;
+                font-size: 16px;
+                padding: 5px;
+            }
+            .pagination-icon {
+                font-size: 16px !important; /* Adjust for FontAwesome icons */
+            }
+        </style>
+        {{ $tasks->links('pagination::bootstrap-4') }}
+    </div>
 </div>
 
 <!-- ✅ Stylish Bootstrap Modal for Success Message -->
@@ -56,7 +72,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <i class="fas fa-check-circle text-success fa-4x mb-3"></i> <!-- ✅ Stylish Check Icon -->
+                <i class="fas fa-check-circle text-success fa-2x mb-3"></i> <!-- ✅ Smaller Check Icon -->
                 <p class="fs-5 text-muted">The task status has been successfully updated.</p>
             </div>
             <div class="modal-footer border-0 d-flex justify-content-center">
@@ -105,5 +121,4 @@
 
 <!-- ✅ Load Local FontAwesome (for check icon) -->
 <script src="{{ asset('assets/fontawesome/js/all.min.js') }}"></script>
-
 @endsection
